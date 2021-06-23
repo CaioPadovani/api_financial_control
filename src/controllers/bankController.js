@@ -27,7 +27,7 @@ module.exports.create = (req, res) => {
 }
 
 module.exports.getConsult = (req, res) => {
-    Bank.findOne({ _id: req.params.id })
+    Bank.findOne({ user: req.params.id })
         .populate('user')
         .then((response) => {
             sendJSONresponse(res, 200, response)
@@ -40,14 +40,35 @@ module.exports.deposito = (req, res) => {
         .then((response) => {
             let val1 = parseFloat(response.saldo)
             let val2 = parseFloat(req.body.saldo)
-            console.log('LOGGGGGGGGG', 'color: #007acc;', val1 + val2);
             Bank.updateOne({ _id: req.params.id }, {
                 $set: {
                     saldo: val1 + val2
                 },
             })
-                .then((update) => {
+                .then(() => {
                     sendJSONresponse(res, 200, { message: "Saldo Atualizado com Sucesso !!" })
+                }).catch(()=>{
+                    sendJSONresponse(res, 401, { message: "Ocorreu algum erro inesperado!!" })
+                })
+
+        })
+
+}
+module.exports.sacar = (req, res) => {
+    Bank.findOne({ _id: req.params.id })
+        .populate('user')
+        .then((response) => {
+            let val1 = parseFloat(response.saldo)
+            let val2 = parseFloat(req.body.saldo)
+            Bank.updateOne({ _id: req.params.id }, {
+                $set: {
+                    saldo: val1 - val2
+                },
+            })
+                .then(() => {
+                    sendJSONresponse(res, 200, { message: "Saldo Atualizado com Sucesso !!" })
+                }).catch(()=>{
+                    sendJSONresponse(res, 401, { message: "Ocorreu algum erro inesperado!!" })
                 })
 
         })

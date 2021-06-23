@@ -17,10 +17,16 @@ module.exports.create = (req, res) => {
       idade: req.body.idade
     })
       .then(response => {
-        sendJSONresponse(res, 200, { message: "Usuario Cadastrado com Sucesso !!!" })
+        sendJSONresponse(res, 200, response)
       })
       .catch(err => {
         sendJSONresponse(res, 401, { message: "Favor preencher todos os campos" })
         console.log(err);
       })
+  }
+  module.exports.list = (req, res) => {
+    User.find()
+    .then((response) => {
+      sendJSONresponse(res, 200, response)
+    })
   }
